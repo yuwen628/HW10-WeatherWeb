@@ -229,7 +229,7 @@ def main():
     load_env(ENV_PATH)
     data = fetch_cwa_data()
     stations = data["cwaopendata"]["dataset"]["Station"]
-    db_path = os.getenv("CWA_SQLITE_DB", "cwa_observations.sqlite3")
+    db_path = os.getenv("CWA_SQLITE_DB", "data/weather.db")
     saved_count, total_count = save_stations(db_path, stations)
     deleted_count = delete_old_observations(db_path)
     total_count -= deleted_count
