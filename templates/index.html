@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>台灣氣象預報觀測站</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div id="message" class="floating-message alert alert-info" role="status" aria-live="polite"></div>
+
+  <nav class="navbar navbar-expand-lg app-nav">
+    <div class="container-fluid">
+      <span class="navbar-brand">台灣氣象預報觀測站</span>
+      <div class="d-flex gap-2 search-bar">
+        <select id="countySelect" class="form-select county-select" aria-label="選擇縣市">
+          <option value="">全部縣市</option>
+        </select>
+        <input id="locationInput" class="form-control" type="search" placeholder="輸入測站、縣市或鄉鎮">
+        <button id="searchBtn" class="btn btn-primary icon-btn" type="button" aria-label="搜尋" title="搜尋">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+        <button id="locateBtn" class="btn btn-outline-light icon-btn" type="button" aria-label="定位" title="定位">
+          <i class="bi bi-crosshair" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+    <section class="map-panel">
+      <div id="map"></div>
+    </section>
+
+    <aside class="info-panel">
+      <section class="weather-block">
+        <div class="block-heading">
+          <div>
+            <p class="eyebrow">目前地點</p>
+            <div id="locationBadges" class="location-badges"></div>
+            <h1 id="locationName">尚未選擇</h1>
+          </div>
+          <span id="updatedAt" class="updated-at">--</span>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric">
+            <span>氣溫</span>
+            <strong id="temperature">--</strong>
+          </div>
+          <div class="metric">
+            <span>濕度</span>
+            <strong id="humidity">--</strong>
+          </div>
+          <div class="metric">
+            <span>降雨機率</span>
+            <strong id="rainProbability">--</strong>
+          </div>
+          <div class="metric">
+            <span>風速</span>
+            <strong id="windSpeed">--</strong>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <span id="weatherText">--</span>
+          <p id="summaryText">選擇測站後，這裡會顯示目前天氣摘要。</p>
+        </div>
+      </section>
+
+      <section class="weather-block">
+        <div class="block-heading compact">
+          <h2>逐3小時預報</h2>
+        </div>
+        <div class="chart-frame">
+          <canvas id="forecastChart"></canvas>
+        </div>
+        <div id="forecastList" class="forecast-list"></div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/weather.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
