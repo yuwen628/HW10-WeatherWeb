@@ -117,21 +117,16 @@ docker run -p 8000:8000 weather-forecast-site
 docker compose up -d
 ```
 
-## Weather update cooldown
+## 天氣資料更新冷卻機制
 
-When the Flask app renders the home page, it checks the latest `obs_time` in
-`data/weather.db`.
+Flask app 顯示首頁時，會檢查 `data/weather.db` 裡最新的 `obs_time`。
 
-- If the latest `obs_time` is not older than 3 hours, the app skips the CWA API.
-- If the latest `obs_time` is older than 3 hours, the app checks a 15-minute API
-  fetch cooldown before calling CWA.
-- If CWA still returns the same or older `obs_time`, the app records the attempt
-  in the `weather_update_state` table and skips additional API calls during the
-  cooldown window.
-- If CWA returns a newer `obs_time`, the app saves the new station observations
-  and records the successful fetch attempt.
+- 如果最新 `obs_time` 距離現在未超過 3 小時，會略過 CWA API 呼叫。
+- 如果最新 `obs_time` 距離現在超過 3 小時，呼叫 CWA API 前會先檢查 15 分鐘冷卻時間。
+- 如果 CWA 回傳的 `obs_time` 仍然與資料庫相同或更舊，會把這次嘗試記錄到
+  `weather_update_state` table，並在冷卻時間內略過後續 API 呼叫。
+- 如果 CWA 回傳較新的 `obs_time`，會寫入新的測站觀測資料，並記錄這次成功嘗試。
 
-The `weather_update_state` table is created automatically when the stale-data
-update flow first needs to check or record API fetch state. Running
-`python cwa_to_sqlite.py` directly still calls the CWA API without this cooldown
-flow.
+`weather_update_state` table 會在過期資料更新流程第一次需要檢查或記錄 API
+呼叫狀態時自動建立。直接執行 `python cwa_to_sqlite.py` 仍會照原本流程呼叫
+CWA API，不會套用這個冷卻機制。
