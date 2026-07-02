@@ -116,3 +116,22 @@ docker run -p 8000:8000 weather-forecast-site
 ```bash
 docker compose up -d
 ```
+
+## Weather update cooldown
+
+When the Flask app renders the home page, it checks the latest `obs_time` in
+`data/weather.db`.
+
+- If the latest `obs_time` is not older than 3 hours, the app skips the CWA API.
+- If the latest `obs_time` is older than 3 hours, the app checks a 15-minute API
+  fetch cooldown before calling CWA.
+- If CWA still returns the same or older `obs_time`, the app records the attempt
+  in the `weather_update_state` table and skips additional API calls during the
+  cooldown window.
+- If CWA returns a newer `obs_time`, the app saves the new station observations
+  and records the successful fetch attempt.
+
+The `weather_update_state` table is created automatically when the stale-data
+update flow first needs to check or record API fetch state. Running
+`python cwa_to_sqlite.py` directly still calls the CWA API without this cooldown
+flow.
